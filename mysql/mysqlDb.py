@@ -3,7 +3,7 @@
 ## -*- coding:utf-8 -*-
 
 '''
-    Description: hxty---MySQL类
+    Description: ---MySQL类
 '''
 
 import MySQLdb
