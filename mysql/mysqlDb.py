@@ -38,3 +38,8 @@ class ClassDb:
     def fetchone(self):
         ## 返回查询的单条数据内容,数据类型:字典
         return self.cursor.fetchone()
+    
+    
+ #usage
+#dbo = ClassDb()    ## 实例化数据库
+#dbo.connect(host=dbHost,port=dbPort,user=dbUser,passwd=dbPass,db=dbName,charset="utf8")
