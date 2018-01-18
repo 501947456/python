@@ -1,0 +1,17 @@
+#常用命令
+   #利用socket检查端口服务是否正常
+　　improt socket
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.settimeout(3)
+    try:
+        s.connect((tAddr, int(tPort)))
+        return True
+    except Exception,err:
+        return False
+    s.close()
+    
+    ＃python执行命令
+       # status,output=commands.getstatusoutput(cmd)  #返回执行状态和执行结果
+    　　# return  status
+    
+    
