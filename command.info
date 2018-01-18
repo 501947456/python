@@ -14,4 +14,11 @@
        # status,output=commands.getstatusoutput(cmd)  #返回执行状态和执行结果
     　　# return  status
     
-    
+ ## 获取当前时间
+def getTimeNow(timeFormat="%Y-%m-%d %X"):
+    return time.strftime(timeFormat,time.localtime())
+
+
+## 获取当天时间
+def getToday(timeFormat="%Y-%m-%d"):
+    return time.strftime(timeFormat,time.localtime())
