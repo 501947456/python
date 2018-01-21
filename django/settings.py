@@ -57,3 +57,8 @@ python manage.py startapp booktest
 python manage.py makemigrations
 python manage.py migrate
 python manage.py shell
+
+
+#django 使用pymysql 
+import pymysql
+pymysql.install_as_MySQLdb()
