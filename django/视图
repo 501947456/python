@@ -1,0 +1,14 @@
+
+在django中，视图对WEB请求进行回应
+视图接收reqeust对象作为第一个参数，包含了请求的信息
+视图就是一个Python函数，被定义在views.py中
+
+#coding:utf-8
+from django.http import HttpResponse
+
+def index(request):
+    return HttpResponse("index")
+def detail(request,id):
+    return HttpResponse("detail %s" % id)
+
+    定义完成视图后，需要配置urlconf，否则无法处理请求
