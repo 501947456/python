@@ -51,7 +51,10 @@ TEMPLATES = [
     },
 ]
 
-
+STATICFILES_DIRS=[
+  os.path.join(BASE_DIR,'static')
+]
+#新建static目录和manage.py平级
 
 python manage.py startapp booktest
 python manage.py makemigrations
