@@ -75,7 +75,15 @@ admin.site.register(BookInfo, BookInfoAdmin)
 class HeroInfoInline(admin.TabularInline)
 
 
+打开根url路由文件mysite/urls.py，修改其中admin.site.urls对应的正则表达式，换成你想要的，比如：
 
+from django.conf.urls import url
+from django.contrib import admin
+
+urlpatterns = [
+    url(r'^my/set/', admin.site.urls),
+]
+这样，我们必须访问http://127.0.0.1:8000/my/set/才能进入admin界面。
 
 
 
