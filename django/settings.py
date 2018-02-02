@@ -60,6 +60,7 @@ python manage.py startapp booktest
 python manage.py makemigrations
 python manage.py migrate
 python manage.py shell
+python manage.py sqlmigrate polls 0001
 
 
 #django 使用pymysql 
