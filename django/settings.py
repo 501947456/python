@@ -66,3 +66,25 @@ python manage.py sqlmigrate polls 0001
 #django 使用pymysql 
 import pymysql
 pymysql.install_as_MySQLdb()
+
+#sqlmigrate的命令可以展示SQL语句
+python manage.py sqlmigrate polls 0001
+
+主键 (IDs) 是自动添加的 你也可以重写此行为
+Django 会在外键字段名上附加 "_id" 。 (你仍然可以重写此行为。)
+
+# 创建一个新的question对象
+    # Django推荐使用timezone.now()代替python内置的datetime.datetime.now()
+    # 这个timezone就来自于Django唯一的依赖库pytz
+    from django.utils import timezone
+    >>> q = Question(question_text="What's new?", pub_date=timezone.now())
+    
+    
+
+
+
+
+
+
+
+
