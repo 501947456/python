@@ -67,3 +67,79 @@ PS：通常我们会给个默认值，防止这种异常的产生，例如reques
 然后是传递的数据。例如'/polls/3/results/'，其中的3是某个question.id的值。重定向后将进入polls:results对应的视图，并将question.id传递给它。
 白话来讲，就是把活扔给另外一个路由对应的视图去干。
 ###########################################################
+###########
+/login/forms.py
+
+class UserForm(forms.Form):
+    username = forms.CharField(label="用户名", max_length=128, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    password = forms.CharField(label="密码", max_length=256, widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+
+##############
+login/views.py
+def login(request):
+    if request.method == "POST":
+        login_form = forms.UserForm(request.POST)
+        message = "请检查填写的内容！"
+        if login_form.is_valid():
+            username = login_form.cleaned_data['username']
+            password = login_form.cleaned_data['password']
+            try:
+                user = models.User.objects.get(name=username)
+                if user.password == password:
+                    return redirect('/index/')
+                else:
+                    message = "密码不正确！"
+            except:
+                message = "用户不存在！"
+        return render(request, 'login/login.html', locals())
+
+    login_form = forms.UserForm()
+    return render(request, 'login/login.html', locals())
+    ############
+    login.html
+
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}登录{% endblock %}
+{% block css %}<link href="{% static 'css/login.css' %}" rel="stylesheet"/>{% endblock %}
+
+
+{% block content %}
+    <div class="container">
+        <div class="col-md-4 col-md-offset-4">
+          <form class='form-login' action="/login/" method="post">
+
+              {% if message %}
+                  <div class="alert alert-warning">{{ message }}</div>
+              {% endif %}
+              {% csrf_token %}
+              <h2 class="text-center">欢迎登录</h2>
+
+              <div class="form-group">
+             {{ login_form.username.label_tag }}
+             {{ login_form.username}}
+           </div>
+          <div class="form-group">
+            {{ login_form.password.label_tag }}
+            {{ login_form.password }}
+         </div>
+
+              <button type="reset" class="btn btn-default pull-left">重置</button>
+              <button type="submit" class="btn btn-primary pull-right">提交</button>
+
+          </form>
+        </div>
+    </div> <!-- /container -->
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
