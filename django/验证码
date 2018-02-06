@@ -1,0 +1,104 @@
+安装captcha
+pip install django-simple-captcha
+二、注册captcha
+在settings中，将‘captcha’注册到app列表里：
+
+# Application definition
+
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'login',
+    'captcha',
+]
+captcha需要在数据库中建立自己的数据表，所以需要执行migrate命令生成数据表：
+
+(mysite_env) F:\Django_course\mysite>python manage.py migrate
+Operations to perform:
+  Apply all migrations: admin, auth, captcha, contenttypes, login, sessions
+Running migrations:
+  Applying captcha.0001_initial... OK
+  
+  三、添加url路由
+  在根目录下的urls.py文件中增加captcha对应的网址：
+
+from django.conf.urls import url
+from django.conf.urls import include
+from django.contrib import admin
+from login import views
+
+urlpatterns = [
+    url(r'^admin/', admin.site.urls),
+    url(r'^index/', views.index),
+    url(r'^login/', views.login),
+    url(r'^register/', views.register),
+    url(r'^logout/', views.logout),
+    url(r'^captcha', include('captcha.urls'))  # 增加这一行
+]
+四、修改forms.py
+from django import forms
+from captcha.fields import CaptchaField
+
+class UserForm(forms.Form):
+    username = forms.CharField(label="用户名", max_length=128, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    password = forms.CharField(label="密码", max_length=256, widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+    captcha = CaptchaField(label='验证码'
+
+
+五、修改login.html
+
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}登录{% endblock %}
+{% block css %}<link href="{% static 'css/login.css' %}" rel="stylesheet"/>{% endblock %}
+
+
+{% block content %}
+    <div class="container">
+        <div class="col-md-4 col-md-offset-4">
+          <form class='form-login' action="/login/" method="post">
+
+              {% if message %}
+                  <div class="alert alert-warning">{{ message }}</div>
+              {% endif %}
+              {% csrf_token %}
+              <h2 class="text-center">欢迎登录</h2>
+              <div class="form-group">
+                  {{ login_form.username.label_tag }}
+                  {{ login_form.username}}
+              </div>
+              <div class="form-group">
+                  {{ login_form.password.label_tag }}
+                  {{ login_form.password }}
+              </div>
+
+              <div class="form-group">
+                  {{ login_form.captcha.errors }}
+                  {{ login_form.captcha.label_tag }}
+                  {{ login_form.captcha }}
+              </div>
+
+              <button type="reset" class="btn btn-default pull-left">重置</button>
+              <button type="submit" class="btn btn-primary pull-right">提交</button>
+
+          </form>
+        </div>
+    </div> <!-- /container -->
+{% endblock %}
+这里额外增加了一条{{ login_form.captcha.errors }}用于明确指示用户，你的验证码不正确。
+
+
+
+
+
+
+
+
+
+
+
+
