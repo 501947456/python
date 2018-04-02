@@ -1,0 +1,49 @@
+https://www.lightxue.com/transforming-code-into-beautiful-idiomatic-python
+https://michaelyou.github.io/2015/04/16/%E4%B8%80%E4%BA%9Bpythonic%E4%BB%A3%E7%A0%81%E7%9A%84%E4%BE%8B%E5%AD%90/
+
+遍历一个范围内的数字
+for i in [0, 1, 2, 3, 4, 5]:
+    print i ** 2
+
+for i in range(6):
+    print i ** 2
+更好的方法
+
+for i in xrange(6):
+    print i ** 2
+xrange会返回一个迭代器，用来一次一个值地遍历一个范围。这种方式会比range更省内存。xrange在Python 3中已经改名为range。
+
+
+遍历一个集合
+
+colors = ['red', 'green', 'blue', 'yellow']
+
+for i in range(len(colors)):
+    print colors[i]
+更好的方法
+
+for color in colors:
+    print color
+   
+  
+反向遍历
+
+colors = ['red', 'green', 'blue', 'yellow']
+
+for i in range(len(colors)-1, -1, -1):
+    print colors[i]
+更好的方法
+
+for color in reversed(colors):
+    print color
+    
+遍历一个集合及其下标
+colors = ['red', 'green', 'blue', 'yellow']
+
+for i in range(len(colors)):
+    print i, '--->', colors[i]
+更好的方法
+
+for i, color in enumerate(colors):
+    print i, '--->', color
+   
