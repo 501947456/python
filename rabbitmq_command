@@ -5,3 +5,15 @@ $ sudo rabbitmqctl add_user myuser mypassword
 $ sudo rabbitmqctl add_vhost myvhost
 $ sudo rabbitmqctl set_user_tags myuser mytag
 $ sudo rabbitmqctl set_permissions -p myvhost myuser ".*" ".*" ".*"
+
+
+#rabbitmq
+broker_url = 'amqp://myuser:mypassword@localhost:5672/myvhost'
+
+#redis
+ pip install -U "celery[redis]"
+ 
+ app.conf.broker_url = 'redis://localhost:6379/0'
+ app.conf.broker_transport_options = {'visibility_timeout': 3600}  # 1 hour.
+ app.conf.result_backend = 'redis://localhost:6379/0'
+
