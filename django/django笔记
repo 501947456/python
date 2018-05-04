@@ -57,4 +57,12 @@ for index in range(20):
         with open(file_path,'wb') as f:
           f.write(file_content)
     
-    
+    CBV
+    url设置
+    url(r'^home/',views.Home.as_view()),
+    from django.views import View
+    class Home(View):
+       def get(self,request):
+           pass
+       def post(self,request):
+           pass
