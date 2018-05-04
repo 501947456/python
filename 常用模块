@@ -56,35 +56,7 @@ print random.randrange(1,10)
 
 OS模块　　
 提供对操作系统进行调用的接口
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27
-28
-29
+
 	
 os.getcwd() 获取当前工作目录，即当前python脚本工作的目录路径
 os.chdir("dirname")  改变当前脚本工作目录；相当于shell下cd
@@ -126,7 +98,98 @@ sys.platform       返回操作系统平台名称
 sys.stdout.write('please:')
 val = sys.stdin.readline()[:-1]
 
+三、hashlib 
+import hashlib
+ 
+# ######## md5 ########
+ 
+hash = hashlib.md5()
+hash.update('admin')
+print hash.hexdigest()
+ 
+# ######## sha1 ########
+ 
+hash = hashlib.sha1()
+hash.update('admin')
+print hash.hexdigest()
+ 
+# ######## sha256 ########
+ 
+hash = hashlib.sha256()
+hash.update('admin')
+print hash.hexdigest()
 
+# ######## sha384 ########
+ 
+hash = hashlib.sha384()
+hash.update('admin')
+print hash.hexdigest()
+ 
+# ######## sha512 ########
+ 
+hash = hashlib.sha512()
+hash.update('admin')
+print hash.hexdigest()
 
+以上加密算法虽然依然非常厉害，但时候存在缺陷，即：通过撞库可以反解。所以，有必要对加密算法中添加自定义key再来做加密。
+1
+2
+3
+4
+5
+6
+7
+	
+import hashlib
+ 
+# ######## md5 ########
+ 
+hash = hashlib.md5('898oaFs09f')
+hash.update('admin')
+print hash.hexdigest()
+
+四、json 和 pickle 
+用于序列化的两个模块
+
+    json，用于字符串 和 python数据类型间进行转换
+    pickle，用于python特有的类型 和 python的数据类型间进行转换
+
+Json模块提供了四个功能：dumps、dump、loads、load
+
+pickle模块提供了四个功能：dumps、dump、loads、load
+
+生成器
+所以，如果列表元素可以按照某种算法推算出来，那我们是否可以在循环的过程中不断推算出后续的元素呢？这样就不必创建完整的list，从而节省大量的空间。在Python中，这种一边循环一边计算的机制，称为生成器：generator。
+
+要创建一个generator，有很多种方法。第一种方法很简单，只要把一个列表生成式的[]改成()，就创建了一个generator：
+	
+>>> L = [x * x for x in range(10)]
+>>> L
+[0, 1, 4, 9, 16, 25, 36, 49, 64, 81]
+>>> g = (x * x for x in range(10))
+>>> g
+<generator object <genexpr> at 0x1022ef630>
+
+迭代器
+
+我们已经知道，可以直接作用于for循环的数据类型有以下几种：
+
+一类是集合数据类型，如list、tuple、dict、set、str等；
+
+一类是generator，包括生成器和带yield的generator function。
+
+这些可以直接作用于for循环的对象统称为可迭代对象：Iterable。
+
+可以使用isinstance()判断一个对象是否是Iterable对象：
+from collections import Iterable
+>>> isinstance([], Iterable)
+True
+>>> isinstance({}, Iterable)
+True
+>>> isinstance('abc', Iterable)
+True
+>>> isinstance((x for x in range(10)), Iterable)
+True
+>>> isinstance(100, Iterable)
 
 
