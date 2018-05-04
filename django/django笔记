@@ -1,0 +1,60 @@
+在settings中设置静态文件目录
+STATICFILES_DIRS = (os.path.join(BASE_DIR,'static'),)
+if request.method == "POST":
+   user=request.POST.get('user',None)
+   pwd = request.POST.get('pwd',None)
+   
+试图渲染数据到前端   
+User_list=[
+{'username':'gzw','gender':'nv','email':'abc@ss.com'},
+]
+
+for index in range(20):
+  temp = {'username':'gzw'+str(index),'gender':'nv','email':'abc@ss.com'}
+  User_list.append(temp)
+  
+  def home(request):
+     return render(request,'home.html',{'user_list': User_list})
+     
+  单选按钮数据获取
+  男：<input type="radio" name="gender" value="1" />
+  女：<input type="radio" name="gender" value="2" />
+  
+  gender=request.POST.get('gender')
+  
+  多选按钮数据提交
+   男：<input type="checkbox" name="favor" value="11" />
+  女：<input type="checkbox" name="favor" value="22" />
+  favor= request.POST.getlist('favor')
+  
+  select 单选数据提交 (get)
+  <select name="city">
+    <option value='sh'>shanghai</option>
+    <option value='bj'>beijing</option>
+    <option value='tj'>tianjing</option>
+    </select>
+    
+  select 多选数据提交 (getlist)
+  <select name="city" multiple>
+    <option value='sh'>shanghai</option>
+    <option value='bj'>beijing</option>
+    <option value='tj'>tianjing</option>
+    </select>
+    
+    
+    文件上传（需要知道文件名，文件内容）
+    文件上传后，文件名，内容都存在了request.FILES中
+    form文件上传必须有enctype="multipart/form-data" 属性
+    <form action="" method="POST" enctype="multipart/form-data">
+    <input type='file' name='fa' />
+    
+    fa_obj= request.FILES.get('fa')
+    
+    获取文件名：fa_obj.name
+    import os
+    file_path=os.paht.join('upload',fa_obj.name)
+    for file_content in fa_obj.chunks():
+        with open(file_path,'wb') as f:
+          f.write(file_content)
+    
+    
