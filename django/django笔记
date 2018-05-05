@@ -66,3 +66,21 @@ for index in range(20):
            pass
        def post(self,request):
            pass
+
+
+request.path_info  当前的url
+url(r'^adfsdf/',views.index,name='i1'),
+url(r'^yug/(\d+)/(\d+)/',views.index,name='i2'),
+url(r'^buy/(?P<pid>\d+)/(?P<nid>\d+)/',views.index,name='i3'),
+在视图函数中生成url
+def func(request,*args,**kwargs):
+  from django.urls import reverse
+  url1 = reverse('index')
+  url2=reverse('index',args=(1,2,))
+  url3 = reverse('index',kwargs={'pid':1,'nid':9}
+  
+  xx.html
+  
+  {% url "i1" %}
+  {% url "i2" 1 2 %}
+  {% url "i3" pid=1 nid=2 %}
