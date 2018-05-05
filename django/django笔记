@@ -84,3 +84,40 @@ def func(request,*args,**kwargs):
   {% url "i1" %}
   {% url "i2" 1 2 %}
   {% url "i3" pid=1 nid=2 %}
+
+django 使用mysql
+在__init__.py下添加如下配置
+import pymysql
+pymysql.install_as_MySQLdb()
+
+orm 操作
+创建
+1:    models.Userinfo.objects.create(username='root',password='123')
+2:    obj=models.Userinfo(username='root',password='123')
+      obj.save()
+3:    dic= {'username'：'eee','password':'666'}
+      models.Userinfo.objects.create(**dic)
+#查询
+   查询所有
+   result = models.Userinfo.objects.all()
+   #result 是一个querySet类型，可以理解为是一个列表[obj(id,username,password),obj(id,username,password),obj(id,username,password)]
+   
+   根据条件查询
+   result = models.Userinfo.objects.filter(username='root')
+   result = models.Userinfo.objects.filter(username='root',password='123') and操作
+   #result 是一个querySet类型
+
+#删除
+models.Userinfo.objects.all().delete()  全部删除
+models.Userinfo.objects.filter(name='ee').delete()
+
+#更新
+
+models.Userinfo.objects.all().update(password=666)
+models.Userinfo.objects.filter(id=4).update(password=666)
+
+
+
+
+
+
