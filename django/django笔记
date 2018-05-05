@@ -100,6 +100,7 @@ orm 操作
 #查询
    查询所有
    result = models.Userinfo.objects.all()
+   #print result.query()  #打印出sql语句
    #result 是一个querySet类型，可以理解为是一个列表[obj(id,username,password),obj(id,username,password),obj(id,username,password)]
    
    根据条件查询
@@ -116,8 +117,27 @@ models.Userinfo.objects.filter(name='ee').delete()
 models.Userinfo.objects.all().update(password=666)
 models.Userinfo.objects.filter(id=4).update(password=666)
 
+设置自增Id
+uid=models.AutoField(primary_key=True)
 
-
-
+字段参数：
+null  db是否可以为空
+default  默认值
+primary_key  主键
+db_column   列名
+db_index=True   索引
+unique=True  唯一索引
+unique_for_date  只对时间做索引
+unique_for_month 只对月份做索引
+unique_for_year  只对年份做索引
+auto_now=True  创建时，自动生成
+auto_now_add=True  更新时，自动生成
+ctime=models.DateTimeField(auto_now_add=True,null=True) 后期时间不会更新
+uptime = models.DateTimeField(auto_now=True) 更新的时候，时间自动更新，并且需要按照下面的更新方式，才会更新
+    obj=UserGroup.objects.filter(id=1).filter()
+    obj.caption="CEO"
+    obj.save()
+    
+choices
 
 
