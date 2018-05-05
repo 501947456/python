@@ -138,6 +138,19 @@ uptime = models.DateTimeField(auto_now=True) 更新的时候，时间自动更�
     obj.caption="CEO"
     obj.save()
     
-choices
+choices django admin 中显示下拉框，避免连表查询
 
+user_type_choices= (
+  (1,"超级用户"),
+  (2,"普通用户"),
+  (3,"普普通用户"),
+)
+user_type_id=models.IntegerField(choices=user_type_choices,default=1)
 
+blank=True  django admin是否可以为空
+
+verbose_name="用户名"  django admin 中字段显示中文
+editable=False  是否可以被编辑
+error_messages
+help_text="dfdfd" 注释，提示信息
+validators  自定义验证机制错误信息
