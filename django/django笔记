@@ -103,6 +103,13 @@ orm 操作
    #print result.query()  #打印出sql语句
    #result 是一个querySet类型，可以理解为是一个列表[obj(id,username,password),obj(id,username,password),obj(id,username,password)]
    
+    result = models.Userinfo.objects.all().values(id,caption)  #查询的结果也为queryset集合，集合里面就是对象了[{'id':1,'caption':'db'},{},{}]
+    #前端展示row.id
+    
+    result = models.Userinfo.objects.all().values_list(id,caption) #querySet集合，内部元素为元祖 [(1,'db'),(2,'ma')]
+    #前端展示row.0 row.1
+    
+    
    根据条件查询
    result = models.Userinfo.objects.filter(username='root')
    result = models.Userinfo.objects.filter(username='root',password='123') and操作
@@ -155,6 +162,7 @@ error_messages
 help_text="dfdfd" 注释，提示信息
 validators  自定义验证机制错误信息
 
-
+外键
+user_group = models.ForeignKey("UserGroup",to_field='uid',default=1)
 
 
