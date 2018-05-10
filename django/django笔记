@@ -165,4 +165,13 @@ validators  自定义验证机制错误信息
 外键
 user_group = models.ForeignKey("UserGroup",to_field='uid',default=1)
 
+{{ forloop.counter }}   #显示循环次数
+{{ forloop.counter0 }}   #显示循环次数从0开始
+{{ forloop.reversecounter }}  #反向排列
+{{ forloop.last }}  #返回false或者true 是否是最后一个循环
+{{ forloop.first }}  #返回false或者true 是否是最后一个循环
+ 
+
+
+
 
