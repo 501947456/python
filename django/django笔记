@@ -171,7 +171,29 @@ user_group = models.ForeignKey("UserGroup",to_field='uid',default=1)
 {{ forloop.last }}  #返回false或者true 是否是最后一个循环
 {{ forloop.first }}  #返回false或者true 是否是最后一个循环
  
+多对多
+
+class Host(models.Model):
+   nid=models.AutoField(prmairy_key=True)
+   hostname = models.CharField(max_length=32,db_index=True)
+   
+class Application(models.Model):
+   name = models.CharField(max_length=32)
+   r = models.ManyToManyField("Host")
+  
+  obj = Application.objects.get(id=1)
+  obj.name
+  
+  obj.r.add(1)  在application id=1中增加 一个Host id=1的对应
+  obj.r.add(2)   在application id=1中增加 一个Host id=2的对应
+  obj.r.add(*[1,2.3.4])  增加多个关系
+  obj.r.add(1,2,3)
+  
+  obj.r.remove(1)
+  obj.r.remove(2,4)
+   obj.r.remove(*[1,2.3.4])
 
 
-
+obj.r.clear()
+obj.set
 
