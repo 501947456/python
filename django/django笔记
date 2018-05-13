@@ -181,6 +181,7 @@ class Application(models.Model):
    name = models.CharField(max_length=32)
    r = models.ManyToManyField("Host")
   
+  操作第三张表
   obj = Application.objects.get(id=1)
   obj.name
   
@@ -195,5 +196,18 @@ class Application(models.Model):
 
 
 obj.r.clear()
-obj.set
+obj.r.set([3,5,7]）  #设置application id=1 对应的的只有3，5，7，其他的都会清空
+
+获取
+obj.r.all()   #id=1 的所有host对象
+
+url补充
+默认值
+url(r'^index/',views.index,{'name','root'})
+def index(request,name):
+  print name
+  
+ 命名空间
+ /admin/   include('app01.urls',namespace)
+ /crm/   include('app01.urls')
 
