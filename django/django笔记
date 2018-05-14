@@ -211,3 +211,35 @@ def index(request,name):
  /admin/   include('app01.urls',namespace)
  /crm/   include('app01.urls')
 
+XSS  两种处理方式（让html代码在前端显示）
+ 在模板中处理 {{ page_str | safe }
+ 在views中处理 利用mark_save函数
+ mark_safe(page_str)
+ 
+ 
+ 自定义分页
+ current_page=request.GET.get('p',1)
+ current_page = int(current_page)
+ start = (current_page -1 )* 10
+ end = current_page * 10
+ data = LIST[start:end]
+ 
+ 求页数
+ all_count=len(LIST)
+count,y=  divmod(all_count,10)
+if y:
+   count +=1
+   
+cookie  
+def login(request):  
+ res = redirect('index')
+ res.set_cookie('username111',u)
+ return res
+
+def index(request):
+  #获取已经登陆的用户
+  v = request.COOIKE.get('username111)
+  if not v:
+    return redirect('/login/')
+  return render(request,'index.html',{'v':v}
+
