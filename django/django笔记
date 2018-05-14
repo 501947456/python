@@ -275,7 +275,7 @@ def index(request):
 from django import form
 class FM(forms.Form):
   user=forms.CharField(error_messages={'required':'用户名不能为空'})
-  pwd = forms.CharField(max_length=12,min_length=6,error_messages={'required':'密码不能为空','min_length':'密码长度不能小于6'，'max_length':'密码长度不能大于12'})
+  pwd = forms.CharField(widget=widgets.PasswordInput(attrs={'class':'c2'}),max_length=12,min_length=6,error_messages={'required':'密码不能为空','min_length':'密码长度不能小于6'，'max_length':'密码长度不能大于12'})
   email = forms.EmailField(error_messages={'required':'邮箱不能为空','invalid':'邮箱格式错误'})
 
 def fm(request):
