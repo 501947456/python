@@ -267,3 +267,37 @@ def index(request):
     return redirect('/login/')
   return render(request,'index.html',{'v':v}
 
+
+
+
+
+#表单
+from django import form
+class FM(forms.Form):
+  user=forms.CharField(error_messages={'required':'用户名不能为空'})
+  pwd = forms.CharField(max_length=12,min_length=6,error_messages={'required':'密码不能为空','min_length':'密码长度不能小于6'，'max_length':'密码长度不能大于12'})
+  email = forms.EmailField(error_messages={'required':'邮箱不能为空','invalid':'邮箱格式错误'})
+
+def fm(request):
+  if request.method == 'GET':
+    obj = FM()
+    return render(request,'fm.html',{'obj':obj})
+  elif request.method == 'POST':
+     obj = FM(request.POST)
+     r1 = obj.is_valid()
+     if r1:
+       print(obj.cleaned_data)  #存储的数据字典
+     else:
+        print(obj.errors)     #错误信息 obj.errors为字典，拿数据 obj.errors['user']  <ul class='errorlist'><li>用户名不能为空</li></ul>
+        return render(request,'fm.html',{ 'obj':obj })
+
+<form action='/fm/' method="POST">
+  {% csrf_token %}
+  {{ obj.user }}
+  <p><input type="text" name="user" /> {{ obj.errors.user.0 }}</p>
+  {{ obj.pwd }}
+  <p><input type="text" name="pwd" /> {{ obj.errors.pwd.0 }}</p>
+  {{ obj.email }}
+  <p><input type="text" name="email" /> {{ obj.errors.email.0 }}</p>
+</form>
+
