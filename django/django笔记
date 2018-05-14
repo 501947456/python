@@ -229,6 +229,30 @@ XSS  两种处理方式（让html代码在前端显示）
 count,y=  divmod(all_count,10)
 if y:
    count +=1
+ 
+当前页：current_page
+总页数： total_count
+每页显示10条数据：per_page_count
+页码：11
+
+如果：总页数 < 11
+    start_index = 0
+    end_index= 总页数
+else:
+    当前页 < =6:
+      start_index =1
+      end_index = 11
+    else:
+       start_index= 当前页 -5 
+       end_index = 当前页 +5 +1
+       如果 当前页 + 5 > 总页数:
+          end_index = 总页数 + 1
+         
+       
+   
+   上一页  下一页
+   
+   
    
 cookie  
 def login(request):  
