@@ -311,3 +311,17 @@ def fm(request):
 
 #method_decorator  
 @method_decorator(auth,name='dispatch')
+
+def user_info(request,nid):
+  if request.method == 'GET':
+    user_obj = models.UserInfo.objects.filter(id=nid).first()
+    mf = UserInforModelForm(instance=user_obj)
+    return render(request,'uesr_edit.html',{'mf':mf,'nid': nid}
+  elif request.method == 'POST':
+     user_obj = models.UserInfo.objects.filter(id=nid).first()
+     mf = UserInfoModelForm(request.POST,instance=user_obj)
+     if mf.is_valid():
+       mf.save()
+  else:
+     print(mf.errors.as_json())
+  return render(request,'uesr_edit.html',{'mf':mf,'nid':nid}
