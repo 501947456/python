@@ -325,3 +325,40 @@ def user_info(request,nid):
   else:
      print(mf.errors.as_json())
   return render(request,'uesr_edit.html',{'mf':mf,'nid':nid}
+  
+  
+  #session
+  elif request.method =='POST':
+    user= request.POST.get('user)
+    pwd= request.POST.get('pwd')
+    if user == 'root' and pwd=='123':
+      request.session['username'] = user
+      request.session['is_login'] =True
+      
+  def index(request):
+    if request.session.get('is_login',None):
+      return HttpResponse(request.session['username'])
+      
+      
+   del request.session['k1']
+   
+   所有键值对
+   request.session.keys()
+   request.session.values()
+   request.session.items()
+   request.session.iterkeys()
+   request.session.itervalues()
+   request.session.iteritems()
+   
+   #用户session的随机字符串
+   request.session.session_key
+   #将所有session失效日期小于当前日期的数据删除
+   request.session.clear_expired()
+   #检查用户session的随机字符串，在数据库中是否存在
+   request.session.exists("session_key")
+   
+  request.session.set_expiry(value)
+    如果value是个整数，session会在设置的秒数后失效
+    如果value是个datetime或者timedelta,session就会在这个时间后生效
+    如果value是个0，用户关闭浏览器session就会失效
+    如果value是None,session会依赖全局session失效策略
