@@ -259,12 +259,19 @@ def login(request):
  res = redirect('index')
  res.set_cookie('username111',u)
  return res
+ 
+def auth(func):
+   def inner(request,*args,**kwargs):
+      v = request.COOKIES.get('username11')
+      if not v:
+         return redirect('/login')
+      return func(requst,*args,**kwargs)
+   return inner
 
+@auth
 def index(request):
   #获取已经登陆的用户
   v = request.COOIKE.get('username111)
-  if not v:
-    return redirect('/login/')
   return render(request,'index.html',{'v':v}
 
 
@@ -301,3 +308,6 @@ def fm(request):
   <p><input type="text" name="email" /> {{ obj.errors.email.0 }}</p>
 </form>
 
+
+#method_decorator  
+@method_decorator(auth,name='dispatch')
