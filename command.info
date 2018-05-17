@@ -40,3 +40,14 @@ if __name__ == "__main__":
         pool.apply_async(func=f1,args=(i,),callback=f2)
     pool.close()
     pool.join()
+
+#Popen使用
+try:
+   import psutil
+except ImportError as msg:
+  print msg
+  from subprocess import Popen,PIPE
+   p = Popen('pip install psutil',stdout=PIPE,shell=True)
+   stdout,stderr = p.communicate()
+    print stdout
+    import psutil
