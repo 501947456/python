@@ -71,3 +71,123 @@ def sendmail(email):
  10   sendmail.delay('test@test.com')
  11   data = list(Blog.objects.values('caption'))
  12   return HttpResponse(json.dumps(data),content_type='application/json')
+ 
+
+
+增加用户
+abbitmqctl  add_user  artcm  111
+rabbitmqctl  set_user_tags  artcm administrator
+rabbitmqctl set_permissions -p / test ".*"".*" ".*" 
+
+启动RabbitMQ的web监控（访问http://127.0.0.1:15672/即可查看RabbitMQ服务的各种信息）
+rabbitmq-plugins enable rabbitmq_management
+
+
+
+###############################################
+celeryconfig.py
+
+#coding:utf-8
+from kombu import  Queue, Exchange
+BROKER_URL='amqp://gzw:123456@192.168.1.179//'
+CELERY_RESULT_BACKEND = 'amqp://gzw:123456@192.168.1.179//'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Asia/Shanghai'
+CELERY_ENABLE_UTC = True
+
+
+CELERYD_STATE_DB = './celery_revokes_state_db'
+
+CELERY_QUEUES = (
+    Queue('queue_add_reduce', exchange=Exchange('calculate_exchange', type='direct'), routing_key='key1'),
+    Queue('queue_sum', exchange=Exchange('calculate_exchange', type='direct'), routing_key='key2'),
+    Queue('celery', Exchange('celery'), routing_key='celery'), # 里面使用的都是默认参数值
+)
+CELERY_DEFAULT_QUEUE = 'celery'
+CELERY_DEFAULT_EXCHANGE_TYPE = 'direct'
+CELERY_DEFAULT_ROUTING_KEY = 'celery'
+
+CELERY_ROUTES = {
+    'tasks.add': {'queue': 'queue_add_reduce', 'routing_key': 'key1', 'delivery_mode': 1},
+    'celeryservice.tasks.reduce': {'queue': 'queue_add_reduce', 'routing_key': 'key1', 'delivery_mode': 1},
+    'celeryservice.tasks.sum_all': {'queue': 'queue_sum', 'routing_key': 'key2', 'delivery_mode': 1},
+}
+
+
+
+
+####################################
+celery02  目录
+tasks.py
+#!/usr/bin/env python
+#coding:utf-8
+from app import app
+
+# @app.task
+# def test(no):
+#     print no
+
+
+@app.task
+def add(x,y):
+    return  x + y
+
+
+
+@app.task
+def reduce(x, y):
+    return x - y
+
+
+@app.task
+def sum_all(values):
+    return sum([int(values) for value in values])
+
+
+@app.task
+def other(x, y):
+    return x * y
+
+################################################### 
+app.py
+#!/usr/bin/env python
+#coding:utf-8
+from celery import Celery
+
+app = Celery('test01',include=['tasks'])
+app.config_from_object('celeryconfig')
+
+if __name__=='__main__':
+    app.start()
+
+############################################
+celery worker -A celeryservice.tasks --loglevel=info --queues=celery,queue_add_reduce --hostname=celery_worker190 --pidfile=./celeryservice/celerymain/celery_worker.pid  >/dev/null 2>&1 &
+celery worker -A celeryservice.tasks --loglevel=info --queues=celery,queue_sum --hostname=celery_worker191 --pidfile=./celeryservice/celerymain/celery_worker.pid  >/dev/null 2>&1 &
+celery worker -A celeryservice.tasks --loglevel=info --queues=queue_add_reduce,queue_sum --hostname=celery_worker192 --pidfile=./celeryservice/celerymain/celery_worker.pid  >/dev/null 2>&1 &
+ 
+ flower -A app  --broker=amqp://gzw:123456@192.168.1.179:5672// --conf=./flowerconfig.py 
+ 
+ 
+ 
+ #################################
+ celery_client.py
+ 
+ 
+ #!/usr/bin/env python
+#coding:utf-8
+
+from celery import  Celery
+
+celery = Celery()
+celery.config_from_object('celeryconfig')
+celery.send_task('tasks.add',(5,6))
+ 
+ 
+ 
+
+
+
+
+
