@@ -1,0 +1,66 @@
+1.1首先我们先看一个小案例：
+
+#_*_coding:utf-8_*_
+from django.db import models
+ 
+# Create your models here.
+ 
+class Colors(models.Model):
+    colors=models.CharField(max_length=10) #蓝色
+    def __str__(self):
+        return self.colors
+ 
+class Ball(models.Model):
+    color=models.OneToOneField("Colors")  #与颜色表为一对一，颜色表为母表
+    description=models.CharField(max_length=10) #描述
+    def __str__(self):
+        return self.description
+ 
+class Clothes(models.Model):
+    color=models.ForeignKey("Colors")   #与颜色表为外键，颜色表为母表
+    description=models.CharField(max_length=10) #描述
+    def __str__(self):
+        return self.description   
+     
+class Child(models.Model):
+    name=models.CharField(max_length=10)   #姓名  
+    favor=models.ManyToManyField('Colors')    #与颜色表为多对多
+    
+  
+  
+#################
+先来区分一下什么是一对一、多对多
+
+
+　　一对一：子表从母表中选出一条数据一一对应，母表中选出来一条就少一条，子表不可以再选择母表中已被选择的那条数据
+
+　　一对多：子表从母表中选出一条数据一一对应，但母表的这条数据还可以被其他子表数据选择
+
+共同点是在admin中添加数据的话，都会出现一个select选框，但只能单选，因为不论一对一还是一对多，自己都是“一”
+
+多对多总结：
+
+　　比如有多个孩子，和多种颜色、
+
+　　每个孩子可以喜欢多种颜色，一种颜色可以被多个孩子喜欢，对于双向均是可以有多个选择
+ ######################################################
+ 一对一
+ 查询：
+ #子表查询母表,找到红球对应的颜色
+#写法1：
+print(models.Ball.objects.get(description="红球").color.colors)  #返回红，通过子表查询母表，写法："子表对象.母表表名的小写.母表字段名" ；通过Ball表查到description为"红球"，查找到对应colors
+#写法2，反向从母表入手：
+print(models.Colors.objects.get(ball__description="红球").colors) #返回红，通过子表查询母表，但形式上是从母表对象自身直接获取字段，写法："母表.objects.get(子表名小写__子表字段="xxx").母表字段名" ；效果和上边完全一致，另一种形式
+
+
+#母表查询子表，找到红色对应的球的名字
+#写法1：
+print(models.Colors.objects.get(colors="红").ball.description)  #返回红球，通过母表查询子表，写法："母表对象.子表表名的小写.子表字段名"；找到颜色为红色的Ball的description
+#写法2，反向从子表入手：
+print(models.Ball.objects.get(color__colors="红").description)  #返回红球，通过母表查询子表，但形式上是从子表对象自身直接获取字段，写法："子表.objects.get(一对一的子表字段__母表字段="xxx").子表字段"；效果和上边完全一致，另一种形式
+复制代码
+ 
+ 
+ 
+ 
+ 
