@@ -35,6 +35,7 @@ for index in range(20):
     </select>
     
   select 多选数据提交 (getlist)
+  
   <select name="city" multiple>
     <option value='sh'>shanghai</option>
     <option value='bj'>beijing</option>
@@ -362,3 +363,130 @@ def user_info(request,nid):
     如果value是个datetime或者timedelta,session就会在这个时间后生效
     如果value是个0，用户关闭浏览器session就会失效
     如果value是None,session会依赖全局session失效策略
+    
+    
+    ##############channels使用#############################
+    settings.py 
+    
+    INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'example',
+    'channels'
+]
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND':'asgi_redis.RedisChannelLayer',
+        'CONFIG': {
+            'hosts':[('192.168.1.12',6379)],
+        },
+        'ROUTING': 'example_channels.routing.channel_routing',
+    }
+}
+#############project目录下
+routing.py
+
+
+from channels.routing import route
+from example.consumers import ws_connect,ws_disconnect,ws_receive
+
+channel_routing = [
+    route('websocket.connect',ws_connect),
+    route('websocket.receive',ws_receive),
+    route('websocket.disconnect',ws_disconnect)
+]
+
+
+
+########app 下面的配置
+consumers.py
+
+from channels import Group
+import json
+
+def ws_connect(message):
+    Group('users').add(message.reply_channel)
+    message.reply_channel.send({
+        'text':json.dumps({
+            'msg':u"你好，很高兴为你服务",
+            'talk':False
+        })
+    })
+
+def ws_disconnect(message):
+    Group('users').discard(message.reply_channel)
+
+
+def ws_receive(message):
+    data = json.loads(message['text'])
+    message.reply_channel.send({
+        'text':json.dumps({
+            'msg':u'我正在思考你的问题{%s}' %data['text'],
+            'talk':True
+        })
+    })
+
+
+
+################################################
+#hmtl
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Django Channels</title>
+</head>
+<body>
+<div style="text-align: center;margin-top: 50px">
+    <input id="message" type="text" style="width: 300px" placeholder="输入消息">
+    <button id="send-message" style="width:80px;margin-left:20px;">发送</button>
+</div>
+<table id="show-message" style="width: 410px;margin: 0 auto;margin-top: 10px">
+    <tr>
+        <td style="text-align: center; border-bottom:1px dashed #000;"><strong>聊天记录</strong></td>
+    </tr>
+</table>
+</body>
+<script src="//code.jquery.com/jquery-3.1.1.min.js"></script>
+<script>
+
+    var socket = new WebSocket('ws://' + window.location.host + '/users/');
+    if (socket.readyState == WebSocket.OPEN) {
+        socket.onopen();
+    }
+    socket.onmessage = function (message) {
+        var data = JSON.parse(message.data);
+        updateLog("机器人", data["msg"]);
+        $("#message").val("");
+        $("#message").focus();
+    };
+    $("#send-message").click(function () {
+        var inputText = $("#message").val();
+        if (typeof(inputText) == "undefined" || inputText.length < 1) {
+            alert("没有输入信息");
+        }
+        else {
+            var msg = {"text": inputText};
+            socket.send(JSON.stringify(msg));
+            updateLog("你", inputText);
+        }
+    });
+    function updateLog(name, message) {
+        var chat = $("#show-message");
+        var ele = "<tr><td>" + name + ": " + message + "</td></tr>"
+        chat.append(ele);
+    }
+</script>
+</html>
+
+
+
+
+
+    
