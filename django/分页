@@ -1,0 +1,284 @@
+一、Django内置分页
+from django.shortcuts import render
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
+L = []
+for i in range(999):
+    L.append(i)
+
+def index(request):
+    current_page = request.GET.get('p')
+
+    paginator = Paginator(L, 10)
+    # per_page: 每页显示条目数量
+    # count:    数据总个数
+    # num_pages:总页数
+    # page_range:总页数的索引范围，如: (1,10),(1,200)
+    # page:     page对象
+    try:
+        posts = paginator.page(current_page)
+        # has_next              是否有下一页
+        # next_page_number      下一页页码
+        # has_previous          是否有上一页
+        # previous_page_number  上一页页码
+        # object_list           分页之后的数据列表
+        # number                当前页
+        # paginator             paginator对象
+    except PageNotAnInteger:
+        posts = paginator.page(1)
+    except EmptyPage:
+        posts = paginator.page(paginator.num_pages)
+    return render(request, 'index.html', {'posts': posts})
+复制代码
+
+复制代码
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<ul>
+    {% for item in posts %}
+        <li>{{ item }}</li>
+    {% endfor %}
+</ul>
+
+<div class="pagination">
+      <span class="step-links">
+        {% if posts.has_previous %}
+            <a href="?p={{ posts.previous_page_number }}">Previous</a>
+        {% endif %}
+          <span class="current">
+            Page {{ posts.number }} of {{ posts.paginator.num_pages }}.
+          </span>
+          {% if posts.has_next %}
+              <a href="?p={{ posts.next_page_number }}">Next</a>
+          {% endif %}
+      </span>
+
+</div>
+</body>
+</html>
+
+
+扩展内置分页：views.py
+from django.shortcuts import render
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
+
+class CustomPaginator(Paginator):
+    def __init__(self, current_page, max_pager_num, *args, **kwargs):
+        """
+        :param current_page: 当前页
+        :param max_pager_num:最多显示的页码个数
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        self.current_page = int(current_page)
+        self.max_pager_num = max_pager_num
+        super(CustomPaginator, self).__init__(*args, **kwargs)
+
+    def page_num_range(self):
+        # 当前页面
+        # self.current_page
+        # 总页数
+        # self.num_pages
+        # 最多显示的页码个数
+        # self.max_pager_num
+        print(1)
+        if self.num_pages < self.max_pager_num:
+            return range(1, self.num_pages + 1)
+        print(2)
+        part = int(self.max_pager_num / 2)
+        if self.current_page - part < 1:
+            return range(1, self.max_pager_num + 1)
+        print(3)
+        if self.current_page + part > self.num_pages:
+            return range(self.num_pages + 1 - self.max_pager_num, self.num_pages + 1)
+        print(4)
+        return range(self.current_page - part, self.current_page + part + 1)
+
+
+L = []
+for i in range(999):
+    L.append(i)
+
+def index(request):
+    current_page = request.GET.get('p')
+    paginator = CustomPaginator(current_page, 11, L, 10)
+    # per_page: 每页显示条目数量
+    # count:    数据总个数
+    # num_pages:总页数
+    # page_range:总页数的索引范围，如: (1,10),(1,200)
+    # page:     page对象
+    try:
+        posts = paginator.page(current_page)
+        # has_next              是否有下一页
+        # next_page_number      下一页页码
+        # has_previous          是否有上一页
+        # previous_page_number  上一页页码
+        # object_list           分页之后的数据列表
+        # number                当前页
+        # paginator             paginator对象
+    except PageNotAnInteger:
+        posts = paginator.page(1)
+    except EmptyPage:
+        posts = paginator.page(paginator.num_pages)
+
+    return render(request, 'index.html', {'posts': posts})
+复制代码
+
+复制代码
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+
+<ul>
+    {% for item in posts %}
+        <li>{{ item }}</li>
+    {% endfor %}
+</ul>
+
+<div class="pagination">
+<span class="step-links">
+{% if posts.has_previous %}
+    <a href="?p={{ posts.previous_page_number }}">Previous</a>
+{% endif %}
+
+    {% for i in posts.paginator.page_num_range %}
+        <a href="?p={{ i }}">{{ i }}</a>
+    {% endfor %}
+
+    {% if posts.has_next %}
+        <a href="?p={{ posts.next_page_number }}">Next</a>
+    {% endif %}
+</span>
+
+<span class="current">
+Page {{ posts.number }} of {{ posts.paginator.num_pages }}.
+</span>
+
+</div>
+</body>
+</html>
+
+
+
+
+二、自定义分页
+分页功能在每个网站都是必要的，对于分页来说，其实就是根据用户的输入计算出应该在数据库表中的起始位置。
+
+1、设定每页显示数据条数
+
+2、用户输入页码（第一页、第二页...）
+
+3、根据设定的每页显示条数和当前页码，计算出需要取数据表的起始位置
+
+4、在数据表中根据起始位置取值，页面上输出数据
+
+需求又来了，需要在页面上显示分页的页面。如：［上一页］［1］［2］［3］［4］［5］［下一页］
+
+1、设定每页显示数据条数
+
+2、用户输入页码（第一页、第二页...）
+
+3、设定显示多少页号
+
+4、获取当前数据总条数
+
+5、根据设定显示多少页号和数据总条数计算出，总页数
+
+6、根据设定的每页显示条数和当前页码，计算出需要取数据表的起始位置
+
+7、在数据表中根据起始位置取值，页面上输出数据
+
+8、输出分页html，如：［上一页］［1］［2］［3］［4］［5］［下一页］
+
+
+复制代码
+#!/usr/bin/env python
+# _*_coding:utf-8_*_
+from django.utils.safestring import mark_safe
+ 
+class PageInfo(object):
+    def __init__(self,current,totalItem,peritems=5):
+        self.__current=current
+        self.__peritems=peritems
+        self.__totalItem=totalItem
+    def From(self):
+        return (self.__current-1)*self.__peritems
+    def To(self):
+        return self.__current*self.__peritems
+    def TotalPage(self):  #总页数
+        result=divmod(self.__totalItem,self.__peritems)
+        if result[1]==0:
+            return result[0]
+        else:
+            return result[0]+1
+ 
+def Custompager(baseurl,currentPage,totalpage):  #基础页，当前页，总页数
+    perPager=11
+    #总页数<11
+    #0 -- totalpage
+    #总页数>11
+        #当前页大于5 currentPage-5 -- currentPage+5
+            #currentPage+5是否超过总页数,超过总页数，end就是总页数
+        #当前页小于5 0 -- 11
+    begin=0
+    end=0
+    if totalpage <= 11:
+        begin=0
+        end=totalpage
+    else:
+        if currentPage>5:
+            begin=currentPage-5
+            end=currentPage+5
+            if end > totalpage:
+                end=totalpage
+        else:
+            begin=0
+            end=11
+    pager_list=[]
+    if currentPage<=1:
+        first="<a href=''>首页</a>"
+    else:
+        first="<a href='%s%d'>首页</a>" % (baseurl,1)
+    pager_list.append(first)
+ 
+    if currentPage<=1:
+        prev="<a href=''>上一页</a>"
+    else:
+        prev="<a href='%s%d'>上一页</a>" % (baseurl,currentPage-1)
+    pager_list.append(prev)
+ 
+    for i in range(begin+1,end+1):
+        if i == currentPage:
+            temp="<a href='%s%d' class='selected'>%d</a>" % (baseurl,i,i)
+        else:
+            temp="<a href='%s%d'>%d</a>" % (baseurl,i,i)
+        pager_list.append(temp)
+    if currentPage>=totalpage:
+        next="<a href='#'>下一页</a>"
+    else:
+        next="<a href='%s%d'>下一页</a>" % (baseurl,currentPage+1)
+    pager_list.append(next)
+    if currentPage>=totalpage:
+        last="<a href=''>末页</a>"
+    else:
+        last="<a href='%s%d'>末页</a>" % (baseurl,totalpage)
+    pager_list.append(last)
+    result=''.join(pager_list)
+    return mark_safe(result)   #把字符串转成html语言
+复制代码
+总结，分页时需要做三件事：
+
+创建处理分页数据的类
+根据分页数据获取数据
+输出分页HTML，即：［上一页］［1］［2］［3］［4］［5］［下一页］
