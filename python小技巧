@@ -1,0 +1,39 @@
+#原地交换两个数值
+x,y=10,20
+y,x=x,y
+#链状比较
+n=10
+print(1<n<30)
+print(2>n>20)
+
+#使用三元运算符实现赋值操作
+［表达式为真的返回值］if[条件表达式] else[表达式为假的返回值]
+y=10
+x=9 if(y==10) else 8
+
+#找abc最小的数
+def small(a,b,c):
+  return a if a<b and a<c else(b if b<a and b<c else c)
+  
+ #列表推导
+ x=[m**2 if m >10 else m**4 for m in range(50)]
+ 
+ #多行字符串
+ multistr = ("select * from multi_row"
+"where row_id < 5"
+"order by age")
+print(multistr)
+select * from multi_rowwhere row_id < 5order by age
+
+multistr = """select * from multi_row
+where row_id < 5"""
+print(multistr)
+select * from multi_row
+where row_id < 5
+
+＃存储列表元素到新的变量
+
+testList = [1, 2, 3]
+x, y, z = testList    # 变量个数应该和列表长度严格一致
+print(x, y, z)
+
