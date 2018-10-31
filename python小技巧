@@ -104,3 +104,7 @@ print(dict(zip(t1, t2)))
 
 print("http://localhost:8888/notebooks/Untitled6.ipynb".startswith(("http://", "https://")))
 print("http://localhost:8888/notebooks/Untitled6.ipynb".endswith((".ipynb", ".py")))
+
+#时间处理 
+import time
+time.strftime('%Y-%m-%d %H:%M:%S',time.localtime())  #格式化输出时间
