@@ -71,3 +71,16 @@ def get_host_ip():
     return ip
 
 print get_host_ip()
+
+
+＃post 提交数据
+def postToWeb(webUrl, data):
+    uf = urllib2.urlopen(webUrl, data)
+    res = uf.read()
+    uf.close()
+    return res
+
+
+
+
+
