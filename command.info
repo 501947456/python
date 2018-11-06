@@ -49,7 +49,8 @@ except ImportError as msg:
   from subprocess import Popen,PIPE
    p = Popen('pip install psutil',stdout=PIPE,shell=True)
    stdout,stderr = p.communicate()
-    print stdout
+   rcode = p.returncode　
+    print stdout
     import psutil
     
     
