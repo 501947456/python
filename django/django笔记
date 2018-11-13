@@ -1,3 +1,7 @@
+django中文文档：
+https://yiyibooks.cn/documents/user/xx/
+
+
 在settings中设置静态文件目录
 STATICFILES_DIRS = (os.path.join(BASE_DIR,'static'),)
 if request.method == "POST":
