@@ -1,0 +1,41 @@
+QueryDict对象
+在HttpRequest对象中，GET和POST 属性是django.http.QueryDict的实例，它是一个自定义的类似字典的类，用来处理同一个键带有多个值
+这个类的需求来自某些html表单元素传递多个值给同一个键
+
+request.POST 和request.GET的QueryDict在一个正常的请求响应循环中是不可变的，如果要获得可变的版本，请使用.copy()
+ <QueryDict: {'name': ['rock','panda']}>
+ 
+ 
+ 实例化QueryDict
+ 
+ QueryDict('a=1&a=2&c=3')
+ <QueryDict: {'a':['1','2'],'c':['3']}>
+ 
+ 通过fromkeys实例化QueryDict(1.11)
+ QueryDict.fromkeys(['a','a','b'],value='val)
+ <QueryDict: {'a':['val','val],'b':['val]}>
+ 
+ 
+ django 不会在user模型上存储原始的（明文）密码，而只是一个哈希，因为这个原因，不要尝试直接操作user的password属性
+ 这也是为什么创建一个user时要使用辅助函数
+ from django.contrib.auth.models import User
+ u=User.objects.get(username='rock')
+ u.set_password('34eer')
+ u.save()
+ 
+ django 如何处理一个请求
+ 
+ 1.django加载ROOT_URLCONF指定的模块，并寻找可用的urlpatterns，它是django.conf.urls.url()实例的一个python列表
+ 2.django 依次匹配每个url，在与请求的url匹配的第一个url停下来
+ 3.一旦其中的一个正则表达式匹配上，django将导入并调用给出的视图，它是一个简单的python函数（或者一个基于类的视图），视图将获得如下参数
+ 
+ 参数1： 一个HttpRequest实例
+ 参数2：如果匹配的正则表达式返回了没有命名的组，那么正则表达式匹配的内容将作为位置参数提供给视图
+ 参数3：关键字参数由正则表达式匹配的命名组组成，
+ 
+ 
+ url 函数
+ url(regex,view,kwargs=none,name=none)
+ 
+ kwargs：传递额外的参数给视图
+ 
