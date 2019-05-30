@@ -111,7 +111,24 @@ LOGGING = {
   
   Logger 一旦决定消息需要处理，它将传递该消息给一个Handler
   
+  Logger配置
+  logger 对应的值是一个字典，其每一个键都是logger的名字，每一个值又是一个字典，
+  - level 可选，logger的级别
+  - propagate 可选 logger的传播设置
+  - filters  可选  logger的filter标识的列表
+  - handlers  可选， logger的handler的标识列表
   
+  配置实例
+  LOGGING= {
+    'loggers':{
+        'reboot': {
+            'handlers':['file_handler','console_handler'],
+            'level':'DEBUG',
+        }
+    }
+  
+  
+  }
   
   
   
@@ -125,9 +142,44 @@ LOGGING = {
   
   处理程序 --- Handler
   
+  handler决定如何处理logger中的每条消息，它表示一个特定的日志行为，例如将消息写到屏幕上，写到文件中或者写到网络socket
+  
+  与logger一样，handler也有一个日志级别，如果消息的日志级别小于handler的级别，handler将忽略该消息
+  
+  logger 可以有多个handler ，而每个handler可以处理不同的日志级别，利用这种方式，可以根据消息的重要性提供不同形式的处理
+  
+  实例e
+  
+  LOGGING={
+     'handlers':{
+        'reboot':{
+           'level':'DEBUG',
+           'class': 'logging.StreamHandler',
+           'formatter': 'simple',
+        }
+     }
+  }
+  
+  
+  
+  
   过滤器 --- Filter 
   
   格式化 -- Formatter
+  
+  
+  django 内置日志
+  
+  django  获取所有的日志
+  
+  django.request  处理与请求相关的日志，5xx响应报出error 日志，4xx报出WARNING 日志
+  
+  django.db.backends 处理与数据库之间交互的日志
+  
+  django.security.*  处理与安全相关的日志
+  
+  django.db.backends.schemea  处理数据库迁移时的日志
+  
   
   
   
