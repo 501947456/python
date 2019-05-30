@@ -48,9 +48,47 @@ request.POST 和request.GET的QueryDict在一个正常的请求响应循环中�
 
 请求地址： /articles/2003/03/03
 调用函数：views.article_detail(request,"2003",'03','03')
+
+url关键字参数
+（?p<name>pattern）
+name 是传给视图的参数名字，pattern是一个正则表达式，也是关键字参数的值
+
+url(r'^articles/(?P<year>[0-9]{4})/(?P<month>[0-9]{2})/$')
+请求地址
+/articles/2003/03/
+调用函数：views.article_detail(request,year='2003',month='03')
+ 
+ 
+ url参数--额外参数
+ django.conf.urls.url() 函数可以接收一个可选的第三个参数，它是一个字典，表示想要传递给视图的额外关键字参数
+ 
+ url(r'^blog/(?P<year>[0-9]{4})/$',view.year_article,{'foo':'bar'})
+ 请求地址：/blog/2015/
+ 调用函数： views.year_archive(request,year='2005',foo='bar')
  
  
  
+ View 
+ 属性：
+ http_method_names
+ 
+ 方法：
+ as_view()
+ dispatch()
+ http_method_not_allowed()
+ 
+ 分页原理
+ 
+ select * from user limit 10   第一页
+ select * from user limit 11,20 第二页
+ select * from user limit (n-1)*10+1,n*10
+ 相应的切片则为
+ User.objects.all()[10] 0-9的记录
+ User.objects.all()[10:20] 10-19的记录
+ User.object.all()[(n-1)*10:n*10]
+ 
+ queryset 数据类型转json类型
+ list(queryset)
  
  
  
