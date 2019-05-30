@@ -1,3 +1,7 @@
+devops.io
+
+
+
 QueryDict对象
 在HttpRequest对象中，GET和POST 属性是django.http.QueryDict的实例，它是一个自定义的类似字典的类，用来处理同一个键带有多个值
 这个类的需求来自某些html表单元素传递多个值给同一个键
@@ -91,8 +95,54 @@ url(r'^articles/(?P<year>[0-9]{4})/(?P<month>[0-9]{2})/$')
  list(queryset)
  
  
+ django 分页对象
+ Paginator 对象
+ class Paginator(object_list,per_page,orphans=0,allow_empty_first_page=True)
+ 
+ Required arguments
+ - object_list
+ - per_page
+ 
+ 属性
+ 
+ -Paginator.count 所有页面的objects总数
+ - Paginator.num_pages 页面总数
+ - Paginator.page_range 页码的范围，从1开始[1,2,3,4]
+ 
+ 方法
+ Paginator.page(number) 返回一个page 对象，number 当前显示的是第几页
  
  
+ Page 对象
+ 
+ class Page(object_list,number,paginator)
+ 
+ 属性
+ - Page.object_list 当前页面的对象列表
+ - Page.number 当前页的序号，从1开始
+ - Page.paginator  Paginator对象
+ 
+ 方法
+  - Page.has_next() 如果有下一页，返回True
+  - Page.has_previous() 如果有上一页，返回True
+  - Page.has_other_pages() 如果有上一页或者下一页，返回True
+  - Page.next_page_number() 返回下一页的页码，如果不存在抛出InvalidPage 异常
+  - Page.previous_page_number（） 返回上一页的页码，如果不存在，抛出InvalidPage异常
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
  
  
  
