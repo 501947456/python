@@ -86,3 +86,58 @@ LOGGING = {
         "handlers": ["file"],
     }
 }
+
+
+  django 日志
+  
+  django使用python内建的logging 模打印日志，python的logging 配置由四个部分组成：
+  
+  记录器--Logger
+  
+  Logger 为日志系统的入口，每个Logger 的命名都是bucket ，你可以向这个bucket 写入需要处理的消息
+  
+  每个logger 都有个日志级别，日志级别表示该logger 将要处理的消息的严重性，python 定义以下几种日志级别
+  
+  DEBUG： 调试系统信息
+  INFO： 普通系统信息
+  WARNING： 出现一个较小的问题
+  ERROR： 出现一个极大的问题
+  CRITICAL 出现一个致命的错误
+  
+  写入Logger 的每条消息都是一条日志，每条日志也具有一个日志级别，它表示对应的消息严重性，每个日志记录还可以包含描述正在打印的事件的元信息
+  
+  当一条消息传递给logger 时，消息的日志级别将于logger的日志级别进行比较，如果消息的日志级别大于等于logger的日志级别，该消息将会继续处理，如果
+  小于，该消息将被忽略
+  
+  Logger 一旦决定消息需要处理，它将传递该消息给一个Handler
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  处理程序 --- Handler
+  
+  过滤器 --- Filter 
+  
+  格式化 -- Formatter
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
