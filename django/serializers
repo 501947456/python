@@ -1,0 +1,43 @@
+序列化
+from idcs.serializers import IdcSerializer                                                                      
+
+In [4]: idc=Idc.objects.get(pk=1)                                                                                       
+
+In [5]: serializer = IdcSerializer(idc)  
+
+In [8]: serializer.data                                                                                                 
+Out[8]: {'phone': '12345678', 'letter': 'yz', 'id': 1, 'name': '亦庄机房', 'email': 'rock@gzw.com', 'address': '北京亦庄机房'}
+
+In [15]: from rest_framework.renderers import JSONRenderer                                                              
+
+In [16]: jr=JSONRenderer()                                                                                              
+
+In [17]: data=jr.render(serializer.data)                                                                                     
+Out[17]: b'{"id":1,"name":"\xe4\xba\xa6\xe5\xba\x84\xe6\x9c\xba\xe6\x88\xbf","address":"\xe5\x8c\x97\xe4\xba\xac\xe4\xba\xa6\xe5\xba\x84\xe6\x9c\xba\xe6\x88\xbf","phone":"12345678","email":"rock@gzw.com","letter":"yz"}'
+
+反序列化
+
+In [21]: from django.utils.six import BytesIO                                                                           
+
+In [22]: stream=BytesIO(data) 
+
+In [27]: result = JSONParser().parse(stream)                                                                            
+
+In [28]: result    #dict                                                                                                      
+Out[28]: 
+{'address': '北京亦庄机房',
+ 'email': 'rock@gzw.com',
+ 'id': 1,
+ 'letter': 'yz',
+ 'name': '亦庄机房',
+ 'phone': '12345678'}
+ 
+ serializer = IdcSerializer(data=data)
+ serializer.is_valid()
+ serializer.validated_data   #经过验证后的数据，干净的数据
+ 
+ 
+ 
+ 
+ 
+ 
