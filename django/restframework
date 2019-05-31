@@ -161,10 +161,20 @@ data = serializers.serializer("json",User.objects.all()[0:10],fields=('username'
  
  处理关联对象的其他方法
  
- add(obj1,obj2,...)  添加一指定的模型对象到关联的对象集中
+
+
  
+ 多对多
+ user1=User.objects.get(username_exact='hh')
+ op=Group.objects.get(name='op)
+ op.user_set.add(user1)
+ op.user_set.remove(user1)
+ op.user_set.clear()
+ 
+  
  create(**kwargs)  创建一个新的对象，将它保存并放在关联的对象集中，返回新创建的对象
  
+ add(obj1,obj2,...)  添加一指定的模型对象到关联的对象集中
  
  remove(obj1,obj2,...)  从关联的对象集中删除指定的模型对象
  
@@ -172,9 +182,19 @@ data = serializers.serializer("json",User.objects.all()[0:10],fields=('username'
  clear()  从关联的对象集中删除所有的对象
  
  
+一对一
+是通过django.db.models.OneToOneField来实现的，被关联的Model会被加上Unique的限制，OneToOneField 是一个位置参数，与模型关联的类
+
+当某个对象想扩展自另一个对象是，最常用的方式就是在这个对象的主键上添加一对一的关系
+
+正查： userprofile.user.username
+反查：user.userprofile.name
  
  
  
+ 查询op组下的用户
+ 
+ Users.objects.filter(groups__name__exact='op')
  
  
   
