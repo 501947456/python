@@ -197,11 +197,74 @@ data = serializers.serializer("json",User.objects.all()[0:10],fields=('username'
  Users.objects.filter(groups__name__exact='op')
  
  
+  Permission
   
+  django 定义每个Model后，默认都会添加该Model的add change delete三个permisson,自定义的permission可以在我们定义model
+  时手动添加
+  
+  class Server(models.Model):
+  
+  
+      class Meta:
+           permissions = (
+           ("view_server","can view server"),
+           ("change_server_status","can change the status of server"),
+           )
+每个permission都是django.contrib.auth.Permission类型的实例，该类型包含三个字段name,codename,content_type
 
+content_type 反应了permission属于哪个model
+codename 代码逻辑中检查权限时要用
+name 是permission的描述，将permission打印到屏幕或者页面时默认显示的就是name
+
+
+User对象的user_permission 字段管理用户的权限
+
+user = User.objects.get(username="rock")
+user.user_permission = [permission_list]
+user.user_permission.add(permission,permission,....) 增加权限
+user.user_permission.remove(permission,permission..)  删除权限
+user.user_permission.clear()  #清空权限
+user.get_all_permissions() #列出用户所有权限
+user.get_group_permission() #列出用户所属组的权限
   
+ 
+ 
+Group permission 
+group permission 管理逻辑和user permission管理一致，group 中使用permission字段做权限管理
+
+group.permissions.set([permission_list])
+group.permissions.add(permission,permission)
+group.permissions.remove(permission,permission)
+group.permissions.clear()
+
+
+权限验证-普通视图
+在视图中验证权限-permission_required
+
+from django.contrib.auth.decorators import login_required,permission_required
+
+@login_required
+@permission_required('dashboard.view_server)
+def my_view(request):
+  ....
   
+权限验证-类视图
+
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required,permission_required
+
+class ServerView(TemplateView)
+  @method_decorator(login_required)
+  @method_decorator(permission_required("dashboard.viwe_server"))
   
+  def get(self,request,*args,**kwargs):
+     ...
+     
+     
+ 权限验证-viwe代码中验证
+ if not request,user,has_perm("dashboard.view_server"):
+    return HttpResponse('Forbidden')
+ 
   
   
   
