@@ -123,3 +123,35 @@ print vd
 #输出
 OrderedDict([('apple', 4), ('banana', 3), ('orange', 2), ('pear', 1)])
 OrderedDict([('pear', 1), ('orange', 2), ('banana', 3), ('apple', 4)])
+
+
+#json 序列化
+ >>> import json
+ >>> print(json.dumps({'4': 5, '6': 7}, sort_keys=True, indent=4))
+    {
+        "4": 5,
+        "6": 7
+    }
+    
+ >>> import json
+    >>> from collections import OrderedDict
+    >>> mydict = OrderedDict([('4', 5), ('6', 7)])
+    >>> json.dumps([1,2,3,mydict], separators=(',', ':'))
+    '[1,2,3,{"4":5,"6":7}]'
+    
+    
+  Using json.tool from the shell to validate and pretty-print::
+
+    $ echo '{"json":"obj"}' | python -m json.tool
+    {
+        "json": "obj"
+    }
+    $ echo '{ 1.2:3.4}' | python -m json.tool
+
+
+
+
+
+
+
+
