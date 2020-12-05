@@ -108,3 +108,18 @@ print("http://localhost:8888/notebooks/Untitled6.ipynb".endswith((".ipynb", ".py
 #时间处理 
 import time
 time.strftime('%Y-%m-%d %H:%M:%S',time.localtime())  #格式化输出时间
+
+
+
+###字典排序
+dd = {'banana': 3, 'apple':4, 'pear': 1, 'orange': 2}
+#按key排序
+kd = collections.OrderedDict(sorted(dd.items(), key=lambda t: t[0]))
+print kd
+#按照value排序
+vd = collections.OrderedDict(sorted(dd.items(),key=lambda t:t[1]))
+print vd
+
+#输出
+OrderedDict([('apple', 4), ('banana', 3), ('orange', 2), ('pear', 1)])
+OrderedDict([('pear', 1), ('orange', 2), ('banana', 3), ('apple', 4)])
